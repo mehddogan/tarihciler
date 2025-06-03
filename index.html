@@ -43,23 +43,23 @@
   <div class="label">kaldı</div>
 
   <script>
-    // 3 ay geçmiş gibi varsayalım
     const now = new Date();
-    const startDate = new Date(now.getFullYear(), now.getMonth() - 3, now.getDate());
+    const startDate = new Date();
+    startDate.setMonth(now.getMonth() - 3); // Güvenli şekilde 3 ay önce
     const endDate = new Date(startDate.getFullYear() + 7, startDate.getMonth(), startDate.getDate());
 
     function updateCountdown() {
       const current = new Date();
-      let totalMonths = (endDate.getFullYear() - current.getFullYear()) * 12 + (endDate.getMonth() - current.getMonth());
-      let years = Math.floor(totalMonths / 12);
-      let months = totalMonths % 12;
-
+      let years = endDate.getFullYear() - current.getFullYear();
+      let months = endDate.getMonth() - current.getMonth();
       let days = endDate.getDate() - current.getDate();
+
       if (days < 0) {
         months -= 1;
-        const previousMonth = new Date(current.getFullYear(), current.getMonth(), 0);
-        days += previousMonth.getDate();
+        const lastMonth = new Date(current.getFullYear(), current.getMonth(), 0);
+        days += lastMonth.getDate();
       }
+
       if (months < 0) {
         years -= 1;
         months += 12;
@@ -68,8 +68,10 @@
       document.getElementById("countdown").textContent = `${years} yıl, ${months} ay, ${days} gün`;
     }
 
-    updateCountdown();
-    setInterval(updateCountdown, 86400000); // Günde bir kez güncelle
+    window.addEventListener("DOMContentLoaded", () => {
+      updateCountdown();
+      setInterval(updateCountdown, 86400000); // Günde bir kez
+    });
   </script>
 </body>
 </html>
